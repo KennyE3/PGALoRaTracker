@@ -1,0 +1,159 @@
+[
+    {
+        "id": "b5525df7.f78ac",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "41ffe102.c5919",
+        "type": "json",
+        "z": "b5525df7.f78ac",
+        "name": "JsonToObjects",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 300,
+        "y": 480,
+        "wires": [
+            [
+                "61e74f3c.c2a658"
+            ]
+        ]
+    },
+    {
+        "id": "b8bc2dca.bfed",
+        "type": "file in",
+        "z": "b5525df7.f78ac",
+        "name": "payload",
+        "filename": "/var/www/html/locationPayload/payload.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 110,
+        "y": 480,
+        "wires": [
+            [
+                "41ffe102.c5919"
+            ]
+        ]
+    },
+    {
+        "id": "cac7aafe.bcddc",
+        "type": "inject",
+        "z": "b5525df7.f78ac",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "b8bc2dca.bfed"
+            ]
+        ]
+    },
+    {
+        "id": "61e74f3c.c2a658",
+        "type": "function",
+        "z": "b5525df7.f78ac",
+        "name": "locationObject",
+        "func": "return { payload : msg.payload.result.locationEst};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 500,
+        "y": 480,
+        "wires": [
+            [
+                "e91e8e12.a50818",
+                "d425bab2.e81da8"
+            ]
+        ]
+    },
+    {
+        "id": "e91e8e12.a50818",
+        "type": "function",
+        "z": "b5525df7.f78ac",
+        "name": "setMarkers",
+        "func": "var latitude = msg.payload.latitude;\nvar longitude = msg.payload.longitude;\n\nvar markerScript = \n    \"L.marker([\" + latitude + \", \" + longitude + \"]).addTo(map).openPopup();\\n\";\n    \nreturn {payload : markerScript};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 710,
+        "y": 580,
+        "wires": [
+            [
+                "a58be000.d6356"
+            ]
+        ]
+    },
+    {
+        "id": "a58be000.d6356",
+        "type": "file",
+        "z": "b5525df7.f78ac",
+        "name": "markers",
+        "filename": "/var/www/html/locationLogs/markers.js",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 920,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d425bab2.e81da8",
+        "type": "function",
+        "z": "b5525df7.f78ac",
+        "name": "setLocationView",
+        "func": "var latitude = msg.payload.latitude;\nvar longitude = msg.payload.longitude;\n\nvar setLocationViewScript = \n    \"var map = L.map('map').setView([\" + latitude + \", \" + longitude + \"], 15);\\n\\n\" +\n    \"L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {\\n\" +\n    \"attribution: '&copy; <a href=\\\"http://osm.org/copyright\\\">OpenStreetMap</a> contributors'\\n\" +\n    \"}).addTo(map);\\n\"\n    \nreturn {payload : setLocationViewScript};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 720,
+        "y": 480,
+        "wires": [
+            [
+                "7fb5a79e.b0a02"
+            ]
+        ]
+    },
+    {
+        "id": "7fb5a79e.b0a02",
+        "type": "file",
+        "z": "b5525df7.f78ac",
+        "name": "locationView",
+        "filename": "/var/www/html/js/setLocationView.js",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 930,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    }
+]

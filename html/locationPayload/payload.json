@@ -1,0 +1,13 @@
+{
+	"result": {
+		"numUsedGateways": 1,
+		"HDOP": null,
+		"locationEst": {
+			"latitude": 46.232778,
+			"longitude": 7.357694,
+			"toleranceHoriz": 0
+		},
+		"algorithmType": "Rssi"
+	},
+	"warnings": []
+}
